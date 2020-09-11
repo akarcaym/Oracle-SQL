@@ -65,5 +65,32 @@ from hr.departments d
 inner join hr.locations l on l.location_id = d.location_id
 inner join hr.countries c on c.country_id = l.country_id )
 
+/* Average salaries of departments*/
+
+select av_sal, department_name
+from hr.departments, (select department_id dept_id, avg(salary) av_sal from hr.employees group by department_id)
+where department_id = dept_id
+
+/* Count employees in job_title*/
+
+
+select j.job_title, count(*) num  
+from hr.employees e inner join hr.jobs j on j.job_id = e.job_id
+group by j.job_title
+order by num desc
+
+/* Max and min salary in each title*/
+
+select j.job_title "title", min(e.salary) "min salary", max(e.salary) "min salary"
+from hr.employees e inner join hr.jobs j on j.job_id = e.job_id
+group by j.job_title
+order by j.job_title
+
+/* Max and min salary in each dept*/
+
+select department_name "department", max(e.salary) "max salary", min(e.salary) "min salary"
+from hr.employees e inner join hr.departments d on d.department_id = e.department_id 
+group by department_name
+
 
 
