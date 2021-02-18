@@ -1,0 +1,160 @@
+--basics
+
+DECLARE
+    v_mesaj VARCHAR2(20) := 'hello';
+BEGIN
+   DBMS_OUTPUT.put_line (v_mesaj);
+END;
+
+select * from hr.employees
+DECLARE 
+rand_id hr.employees.employee_id%type :=100;
+e_name hr.employees.first_name%type;
+e_dept hr.employees.department_id%type;
+BEGIN
+SELECT first_name, department_id INTO e_name, e_dept 
+FROM hr.employees 
+WHERE employee_id = rand_id; 
+dbms_output.put_line('Employee name: '|| e_name ||  ' Department: ' || e_dept ||'' );
+END;
+
+select * from hr.departments
+
+SELECT e.first_name, d.department_name
+FROM hr.employees e, hr.departments d
+WHERE e.employee_id = 110 AND e.department_id = d.department_id
+
+
+DECLARE 
+rand_id hr.employees.employee_id%type :=110;
+e_name hr.employees.first_name%type;
+e_dept hr.departments.department_name%type;
+BEGIN
+SELECT e.first_name, d.department_name INTO e_name, e_dept 
+FROM hr.employees e, hr.departments d
+WHERE e.employee_id = rand_id AND e.department_id = d.department_id; 
+dbms_output.put_line('Employee name: '|| e_name ||  ' Department: ' || e_dept ||'' );
+END;
+
+
+
+DECLARE
+t_date DATE := SYSDATE;
+v_hour TIMESTAMP := SYSTIMESTAMP;
+BEGIN
+dbms_output.put_line(t_date);
+dbms_output.put_line(v_hour);
+END;
+
+
+--IF-THEN-ELSE : check the salary of employee
+
+DECLARE 
+rand_id hr.employees.employee_id%type :=110;
+e_name hr.employees.first_name%type;
+e_sal hr.employees.salary%type;
+BEGIN
+SELECT first_name, salary INTO e_name, e_sal 
+FROM hr.employees
+WHERE employee_id = rand_id;
+    IF (e_sal < 9000) THEN
+    dbms_output.put_line('Employee name: '|| e_name || ' give promotion'  );
+    ELSE
+    dbms_output.put_line('Employee name: '|| e_name ||  ' no promotion' );
+    END IF;
+END;
+
+-- create your own table
+
+CREATE TABLE c_employees
+AS (SELECT * FROM hr.employees)
+
+--check the new table
+
+SELECT * FROM c_employees
+
+-- Similar to below example. But make some updates after if statement
+
+DECLARE 
+    rand_id c_employees.employee_id%type :=110;
+    e_name c_employees.first_name%type;
+    e_sal c_employees.salary%type;
+BEGIN
+    SELECT first_name, salary INTO e_name, e_sal 
+    FROM c_employees
+    WHERE employee_id = rand_id;
+        IF (e_sal < 9000) THEN
+        UPDATE c_employees
+        SET salary = salary + 1000
+            WHERE employee_id = rand_id;
+        dbms_output.put_line('Salary updated' );
+        END IF;
+END;
+
+--check the results 
+
+SELECT e.salary AS "old salary", c.salary "updated salary" FROM hr.employees e, c_employees c WHERE e.employee_id = c.employee_id AND c.employee_id = 110
+
+--LOOP
+
+DECLARE 
+   a number := 1; 
+BEGIN 
+   LOOP 
+      dbms_output.put_line(a); 
+      a := a + 1; 
+      IF a > 5 THEN 
+         exit; 
+      END IF; 
+   END LOOP;   
+   dbms_output.put_line('Last value of a is : ' || a); 
+END;
+
+--WHILE
+
+
+DECLARE 
+    a number := 1;
+BEGIN
+    WHILE a < 10 LOOP
+    a := a + 1;
+    dbms_output.put_line(a); 
+    END LOOP;
+END;
+
+
+--FOR
+
+DECLARE 
+    a number(2);
+BEGIN
+    FOR a IN REVERSE 20 .. 30 LOOP
+    dbms_output.put_line(a); 
+    END LOOP;
+END;
+
+--STRING
+
+DECLARE
+a varchar2(10) := 'hello ';
+b varchar2(10) := 'dude';
+c varchar2(20);
+d number;
+BEGIN
+c := INITCAP(CONCAT(a,b));
+dbms_output.put_line(c);
+d := INSTR(a,'e'); --first occurance of e 
+dbms_output.put_line(d);
+dbms_output.put_line(length(c));
+dbms_output.put_line(lower(c));
+dbms_output.put_line(lpad(c,'14','0'));
+dbms_output.put_line(lpad(c,'3','z'));
+dbms_output.put_line(rpad(c,'14','z'));
+dbms_output.put_line(ltrim(c,'Hel'));
+dbms_output.put_line(replace(c,'ello','ola'));
+dbms_output.put_line(substr(c,'2','2'));
+dbms_output.put_line(upper(c));
+END;
+
+
+
