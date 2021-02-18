@@ -156,5 +156,119 @@ dbms_output.put_line(substr(c,'2','2'));
 dbms_output.put_line(upper(c));
 END;
 
+--ARRAY
+
+DECLARE
+type seasons IS VARARRAY(4) OF VARCHAR(10);
+season_list seasons;
+cap number;
+BEGIN
+season_list := seasons('winter','spring','summer','autumn')
+cap = season_list.count
+FOR i IN 1 .. cap LOOP
+    dbms_output.put_line(season_list[i]);
+END LOOP;
+END;
+    
+-- ARRAY W/CURSOR. extende department names into array
+
+DECLARE
+    CURSOR depts IS SELECT department_name FROM hr.departments;
+    type dept_list is VARRAY(30) OF hr.departments.department_name%type;
+    departments dept_list := dept_list();
+    counter integer:= 0;
+BEGIN
+    FOR i in depts LOOP
+        counter := counter + 1;
+        departments.extend;
+        departments(counter) := i.department_name;
+        dbms_output.put_line(departments(counter)); 
+    END LOOP;
+END;
+    
+--PROCEDURE
+
+CREATE OR REPLACE PROCEDURE example_pro
+AS 
+BEGIN 
+   dbms_output.put_line('Hello Dude'); 
+END; 
+
+--
+
+EXEC example_pro;
+
+--
+
+BEGIN 
+   example_pro;
+END; 
+
+--delete procedure
+
+DROP PROCEDURE example_pro;
+
+-- finding minimum value
+CREATE OR REPLACE PROCEDURE findMin(a IN number, b IN number, c OUT number) IS
+BEGIN
+    IF a>b THEN
+    c := b;
+    ELSE 
+    c := a;
+    END IF;
+END;
 
 
+DECLARE
+x number := 2673;
+y number := 2671;
+z number;
+BEGIN
+findMin(x,y,z);
+dbms_output.put_line('Min value is: ' || z); 
+END;
+
+--create a procedure for calculating promoted salary
+
+CREATE OR REPLACE PROCEDURE newSalary(x IN OUT number) AS
+BEGIN
+x:= (x/10) + x ;
+END;
+
+DECLARE
+    rand_id c_employees.employee_id%type := 111;
+    e_name c_employees.first_name%type;
+    e_sal c_employees.salary%type;
+BEGIN
+    SELECT first_name, salary INTO e_name, e_sal
+    FROM c_employees
+    WHERE employee_id = rand_id;
+    dbms_output.put_line('Old salary is: ' || e_sal); 
+    newSalary(e_sal);
+    dbms_output.put_line('New salary is: ' || e_sal); 
+END;
+
+select * from c_employees where employee_id=111
+
+--At this case salary is not updated. Let's update the column
+
+
+DECLARE
+    rand_id c_employees.employee_id%type := 111;
+    e_name c_employees.first_name%type;
+    e_sal c_employees.salary%type;
+BEGIN
+    SELECT first_name, salary INTO e_name, e_sal
+    FROM c_employees
+    WHERE employee_id = rand_id;
+    dbms_output.put_line('Old salary is: ' || e_sal); 
+    newSalary(e_sal);
+    dbms_output.put_line('New salary is: ' || e_sal); 
+    UPDATE c_employees
+    SET salary = e_sal
+    WHERE employee_id = rand_id;
+    dbms_output.put_line('Salary is updated'); 
+END;
+
+
+select * from c_employees where employee_id=111
