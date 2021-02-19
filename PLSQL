@@ -330,4 +330,18 @@ BEGIN
     END LOOP;
 END;
 
+-- open & fetch in cursor
+
+DECLARE
+    dept_name hr.departments.department_name%type;
+    dept_id hr.departments.department_id%type;
+    CURSOR crs IS SELECT department_name, department_id FROM hr.departments;
+BEGIN
+    OPEN crs;
+    LOOP
+    FETCH crs INTO dept_name, dept_id;
+    EXIT WHEN crs%NOTFOUND;
+    dbms_output.put_line('Department ID is: ' || dept_id|| '   Department name is: ' || dept_name); 
+    END LOOP;
+END;
 
