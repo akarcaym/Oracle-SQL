@@ -272,3 +272,62 @@ END;
 
 
 select * from c_employees where employee_id=111
+
+--
+
+CREATE OR REPLACE FUNCTION totalDept RETURN number IS
+    total number(2) := 0;
+BEGIN
+    SELECT count(*) INTO total
+    FROM hr.departments;
+    RETURN total;
+END;
+
+DECLARE 
+   d number(2); 
+BEGIN 
+   d := totalDept(); 
+   dbms_output.put_line('Depts : ' || d); 
+END; 
+
+--Find the employees
+
+CREATE OR REPLACE FUNCTION totalEmp (x hr.employees.department_id%TYPE) RETURN number IS
+    total number(2) := 0;
+BEGIN
+    SELECT count(*) INTO total
+    FROM hr.employees WHERE department_id = x;
+    RETURN total;
+END;
+
+
+DECLARE 
+   d number(2); 
+BEGIN 
+   d := totalEmp(100); 
+   dbms_output.put_line('Employee number : ' || d); 
+END; 
+
+--check the value
+
+SELECT count(*) FROM hr.employees WHERE department_id = 100
+
+--try to find employee number of each department
+
+DECLARE 
+CURSOR depts IS SELECT department_id FROM hr.departments;
+counter number := 0;
+d number(2);
+dept_no number(3);
+dept_name varchar2(20);
+BEGIN
+    FOR i IN depts LOOP
+    SELECT department_name INTO dept_name FROM hr.departments WHERE department_id = i.department_id;
+    d := totalEmp(i.department_id);
+    IF d != 0 then
+        dbms_output.put_line('Employee number of ' || dept_name || 'is : ' || d); 
+    END IF;
+    END LOOP;
+END;
+
+
