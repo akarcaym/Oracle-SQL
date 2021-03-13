@@ -1,0 +1,53 @@
+Weather Observation 8:
+Query the list of CITY names from STATION which have vowels (i.e., a, e, i, o, and u) as both their first and last characters. Your result cannot contain duplicates.
+
+select distinct(city) from (select city from (select city from station where REGEXP_LIKE(city,'^(A|E|I|O|U)(*)')) where REGEXP_LIKE(city,'(*)(a|e|i|o|u)$')); 
+
+Weather Observation 9:
+Query the list of CITY names from STATION that do not start with vowels. Your result cannot contain duplicates.
+
+select distinct(city) from station where NOT REGEXP_LIKE(city,'^(A|E|I|O|U)(*)');
+
+Weather Observation 10:
+Query the list of CITY names from STATION that do not end with vowels. Your result cannot contain duplicates.
+
+select distinct(city) from station where not REGEXP_LIKE(city,'(*)(a|e|i|o|u)$');
+
+Weather Observation 11:
+Query the list of CITY names from STATION that either do not start with vowels or do not end with vowels. Your result cannot contain duplicates.
+
+select distinct(city) from station where not REGEXP_LIKE(city,'^(A|E|I|O|U)(*)') or not REGEXP_LIKE(city,'(*)(a|e|i|o|u)$');
+
+Weather Observation 12:
+Query the list of CITY names from STATION that do not start with vowels and do not end with vowels. Your result cannot contain duplicates.
+
+select distinct(city) from station where not REGEXP_LIKE(city,'^(A|E|I|O|U)(*)') and not REGEXP_LIKE(city,'(*)(a|e|i|o|u)$');
+
+Employee Names
+Write a query that prints a list of employee names (i.e.: the name attribute) from the Employee table in alphabetical order.
+
+select name from employee order by name;
+
+Employee Salaries
+Write a query that prints a list of employee names (i.e.: the name attribute) for employees in Employee having a salary greater than 2000 per month who have been employees for less than 10 months. Sort your result by ascending employee_id.
+
+select name from employee where salary > 2000 and months < 10 order by employee_id;
+
+Contest Leaderboard
+The total score of a hacker is the sum of their maximum scores for all of the challenges. Write a query to print the hacker_id, name, and total score of the hackers ordered by the descending score. If more than one hacker achieved the same total score, then sort the result by ascending hacker_id. Exclude all hackers with a total score of 0 from your result.
+
+select hackid, name, tot_scr 
+from (select sum(scr) as tot_scr, hacker_id as hackid  
+      from (select max(score) as scr, hacker_id ,challenge_id 
+          from submissions group by hacker_id, challenge_id)  group by hacker_id), hackers h where hacker_id = hackid and tot_scr > 0 order by tot_scr desc, hackid asc;
+          
+New Companies
+Given the table schemas below, write a query to print the company_code, founder name, total number of lead managers, total number of senior managers, total number of managers, and total number of employees. Order your output by ascending company_code.
+
+select c.company_code, c.founder, COUNT(DISTINCT(l.lead_manager_code)), COUNT(DISTINCT(s.senior_manager_code)), COUNT(DISTINCT(m.manager_code)), COUNT(DISTINCT(e.employee_code)) 
+from company c, lead_manager l, senior_manager s, manager m, employee e 
+where c.company_code = l.company_code and l.lead_manager_code= s.lead_manager_code and s.senior_manager_code = m.senior_manager_code and m.manager_code = e.manager_code 
+group by c.company_code, c.founder 
+order by c.company_code;
+
+
