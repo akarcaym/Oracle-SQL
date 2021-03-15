@@ -50,4 +50,13 @@ where c.company_code = l.company_code and l.lead_manager_code= s.lead_manager_co
 group by c.company_code, c.founder 
 order by c.company_code;
 
+Weather Observation Station 20
+A median is defined as a number separating the higher half of a data set from the lower half. Query the median of the Northern Latitudes (LAT_N) from STATION and round your answer to 4 decimal places.
+
+select round(lat_n,4) from (select ROW_NUMBER() OVER (order by lat_n) as row_num, lat_n from station), (select count(distinct(lat_n)) as latCount from station) where row_num = round(latCount/2); 
+
+The Report
+Ketty gives Eve a task to generate a report containing three columns: Name, Grade and Mark. Ketty doesn't want the NAMES of those students who received a grade lower than 8. The report must be in descending order by grade -- i.e. higher grades are entered first. If there is more than one student with the same grade (8-10) assigned to them, order those particular students by their name alphabetically. Finally, if the grade is lower than 8, use "NULL" as their name and list them by their grades in descending order. If there is more than one student with the same grade (1-7) assigned to them, order those particular students by their marks in ascending order.
+
+select (CASE WHEN GRADE < 8 THEN NULL ELSE name END),  grade, marks from students s, grades g where s.marks between g.min_mark and g.max_mark order by grade desc, name, marks;
 
